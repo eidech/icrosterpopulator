@@ -61,24 +61,34 @@ while (loop):
         continue
 
     try:
-        #shift view to iFrame and locate <select> element
+        #shift view to iFrame and locate <table> element
         driver.switch_to.default_content()
         frame = driver.find_element(By.ID, "frameWorkspace")
         driver.switch_to.frame(frame)
-        studentListSelect = Select(driver.find_element(By.ID, "allListID"))
+        print("Successfully moved to frameWorkspace")
+        frame = driver.find_element(By.ID, "frameWorkspaceWrapper")
+        driver.switch_to.frame(frame)
+        print("Successfully moved to frameWorkspaceWrapper")
+        outerframe = driver.find_element(By.ID, "frameWorkspaceDetail")
+        driver.switch_to.frame(outerframe)
+        print("Successfully moved to frameWorkspaceDetail")
+        innerframe = driver.find_element(By.ID, "searchResults")
+        driver.switch_to.frame(innerframe)
+        print("Successfully moved to searchResults")
 
-        # find the button used to move values to right
-        movebutton = driver.find_element(By.ID, "addSelection")
+        rows = driver.find_elements(By.TAG_NAME, "tr")
 
         # iterate through options and select ones in the list of students, then move them to the right
-        for option in studentListSelect.options:
+        for row in rows:
 
-            optionStudentNumber = option.text.split('#',1)[1]
+            student_info = row.text
+
+            optionStudentNumber = student_info.split(') ',1)[1]
             print("Option Student Number: " + optionStudentNumber)
 
             if(optionStudentNumber in studentstoselect):
-                option.click()
-                movebutton.click()
+                row.click()
+                
     except:
         print("ERROR: Please ensure you are at the proper screen!\n")
         continue
